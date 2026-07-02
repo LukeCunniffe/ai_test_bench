@@ -1,0 +1,16 @@
+{
+	"application_name": "AI Test Bench",
+	"version": "0.2.0",
+
+	"camera": {
+		"index": 0
+	},
+
+	"ai": {
+		"model": "yolov8n.pt"
+	},
+
+	"database": {
+		"path": "database/test_bench.db"
+	}
+}

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Database
+database/*.db
+
+# Logs
+logs/
+
+# AI models
+models/*.pt
+
+# OS files
+.DS_Store

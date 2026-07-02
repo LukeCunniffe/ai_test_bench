@@ -1,0 +1,20 @@
+# ADR-001: Modular Inspections
+
+## Status
+
+Accepted
+
+## Decision
+
+Each inspection will be implemented as an independent class.
+
+## Reason
+
+- Easy to extend
+- Easy to test
+- Easy to disable
+- Keeps main.py simple
+
+## Consequences
+
+Adding a new inspection should not require changing the inspection manager.
