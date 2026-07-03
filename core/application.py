@@ -15,6 +15,7 @@ from core.database import Database
 from core.detector import Detector
 from core.manager import InspectionsManager
 from core.person_inspection import PersonInspection
+from core.inspection_factory import InspectionFactory
 
 class Application:
 
@@ -36,9 +37,14 @@ class Application:
                 self.config.database_path
         )
 
-        self.manager = InspectionsManager([
-                PersonInspection
-        ])
+        inspections = []
+
+        for inspection_name in self.config.enabled_inspections:
+            inspections.append(
+                    InspectionFactory.create(inspection_name)
+            )
+        
+        self.manager = InspectionsManager(inspections)
 
     def run(self):
 

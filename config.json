@@ -12,5 +12,11 @@
 
 	"database": {
 		"path": "database/test_bench.db"
+	},
+
+	"inspections": {
+		"enabled": [
+			"person"
+		]
 	}
 }

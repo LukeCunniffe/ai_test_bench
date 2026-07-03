@@ -24,3 +24,7 @@ class Config:
     @property
     def database_path(self):
         return self.data["database"]["path"]
+
+    @property
+    def enabled_inspections(self):
+        return self.data["inspections"]["enabled"]
