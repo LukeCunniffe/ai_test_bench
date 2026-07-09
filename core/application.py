@@ -14,8 +14,8 @@ from core.config import Config
 from core.database import Database
 from core.detector import Detector
 from core.manager import InspectionsManager
-from core.person_inspection import PersonInspection
 from core.inspection_factory import InspectionFactory
+from core.inspection_report import InspectionReport
 
 class Application:
 
@@ -54,23 +54,16 @@ class Application:
 
         results = self.manager.run_all(detections)
 
-        overall_passed = self.manager.overall_passed(results)
+        report = InspectionReport(
+                self.config.app_name,
+                self.config.version,
+                results
+        )
 
-        overall_result = "PASS" if overall_passed else "FAIL"
+        overall_result = "PASS" if report.overall_passed() else "FAIL"
 
         self.database.save(overall_result)
 
-        print()
-
-        print("=" * 40)
-        print(self.config.app_name)
-        print(f"Version {self.config.version}")
-        print("=" * 40)
-
-        for result in results:
-            print(result)
-
-        print()
-        print(f"Overall result: {overall_result}")
+        report.print_report()
 
         self.camera.release()

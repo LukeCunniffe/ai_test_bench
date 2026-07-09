@@ -1,4 +1,4 @@
-from core.person_inspection import PersonInspection
+from inspections.person import PersonInspection
 
 INSPECTIONS = {
         "person": PersonInspection
@@ -10,5 +10,4 @@ class InspectionFactory:
         if name not in INSPECTIONS:
             raise ValueError(f"Unknown inspection type: {name}")
 
-        inspection_class = INSPECTIONS[name]
-        return inspection_class()
+        return INSPECTIONS[name]()

@@ -1,8 +1,11 @@
 import json
+from pathlib import Path
 
 class Config:
     def __init__(self, path="config.json"):
-        with open(path, "r") as file:
+        config_path = Path(path)
+
+        with open(config_path, "r") as file:
             self.data = json.load(file)
 
     @property
