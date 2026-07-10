@@ -16,6 +16,7 @@ from core.detector import Detector
 from core.manager import InspectionsManager
 from core.inspection_factory import InspectionFactory
 from core.inspection_report import InspectionReport
+from rendering.overlay_renderer import OverlayRenderer
 
 class Application:
 
@@ -42,6 +43,8 @@ class Application:
         
         self.manager = InspectionsManager(inspections)
 
+        self.renderer = OverlayRenderer()
+
         self.camera = Camera(
                 self.config.camera_index
         )
@@ -62,7 +65,13 @@ class Application:
                 detections = self.detector.detect(frame)
                 results = self.manager.run_all(detections)
                 
-                self.camera.show(frame)
+                annotated_frame = self.renderer.render(
+                        frame,
+                        detections,
+                        results
+                )
+
+                self.camera.show(annotated_frame)
 
                 key = self.camera.get_key()
 

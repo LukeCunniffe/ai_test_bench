@@ -3,20 +3,20 @@ from core.result import InspectionsResult
 
 class PersonInspection(BaseInspection):
 
-    def run(self, detections) -> InspectionsResult:
+    def run(self, detections):
+        people_detected = sum(
+                1
+                for detection in detections
+                if detection.class_name == "person"
+        )
 
-        people = 0
-
-        for result in detections:
-            for box in result.boxes:
-                if int(box.cls) == 0:
-                    people += 1
+        passed = people_detected > 0
 
 
         return InspectionsResult(
                 name="Person Detection",
-                passed=people > 0,
+                passed=passed,
                 details={
-                    "people_detected": people
+                    "people_detected": people_detected
                 }
         )
