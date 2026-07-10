@@ -13,9 +13,16 @@ class Camera:
         success, frame = self.camera.read()
 
         if not success:
-            raise RuntimeError("Unable to capture frame.")
+            return None
 
         return frame
 
+    def show(self, frame):
+        cv2.imshow("AI Test Bench", frame)
+
+    def get_key(self):
+        return cv2.waitKey(1) & 0xFF
+
     def release(self):
         self.camera.release()
+        cv2.destroyAllWindows()

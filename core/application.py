@@ -25,10 +25,6 @@ class Application:
 
         self.config = Config()
 
-        self.camera = Camera(
-                self.config.camera_index
-        )
-
         self.detector = Detector(
                 self.config.model_path
         )
@@ -46,24 +42,49 @@ class Application:
         
         self.manager = InspectionsManager(inspections)
 
+        self.camera = Camera(
+                self.config.camera_index
+        )
+
     def run(self):
+        print("Starting live inspection. . .")
+        print("Press 's' to save an inspection.")
+        print("Press 'q' to quit.")
+        
+        try:
+            while True:
+                frame = self.camera.capture()
 
-        frame = self.camera.capture()
+                if frame is None:
+                    print("Warning: unable to capture frame. Exiting live inspection.")
+                    break
 
-        detections = self.detector.detect(frame)
+                detections = self.detector.detect(frame)
+                results = self.manager.run_all(detections)
+                
+                self.camera.show(frame)
 
-        results = self.manager.run_all(detections)
+                key = self.camera.get_key()
 
+                if key == ord("s"):
+                    self.complete_inspection(results)
+
+                elif key == ord("q"):
+                    break
+        
+        finally:
+            self.camera.release()
+
+    def complete_inspection(self, results):
         report = InspectionReport(
                 self.config.app_name,
                 self.config.version,
                 results
         )
 
-        overall_result = "PASS" if report.overall_passed() else "FAIL"
+        overall_result = (
+                "PASS" if report.overall_passed() else "FAIL"
+        )
 
         self.database.save(overall_result)
-
         report.print_report()
-
-        self.camera.release()
