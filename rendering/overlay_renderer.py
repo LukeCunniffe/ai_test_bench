@@ -1,8 +1,24 @@
 import cv2
+from rendering.colours import WHITE, GREEN
+from rendering.constants import (
+        HEADER_X,
+        HEADER_Y,
+        RESULTS_X,
+        RESULTS_Y,
+        RESULT_SPACING,
+        DETAIL_SPACING,
+        CONTROLS_X,
+        CONTROLS_BOTTOM_MARGIN,
+        BOX_THICKNESS,
+        HEADER_FONT_SCALE,
+        RESULT_FONT_SCALE,
+        DETAIL_FONT_SCALE,
+        CONTROL_FONT_SCALE,
+)
 
 class OverlayRenderer:
 
-    def render(self, frame, detections, results):
+    def render(self, frame, detections, results, fps):
         annotated_frame = frame.copy()
 
         self.draw_detections(
@@ -10,7 +26,10 @@ class OverlayRenderer:
                 detections
         )
 
-        self._draw_header(annotated_frame)
+        self._draw_header(
+                annotated_frame,
+                fps
+        )
 
         self._draw_results(
                 annotated_frame,
@@ -23,15 +42,36 @@ class OverlayRenderer:
 
         return annotated_frame
 
-    def _draw_header(self, frame):
+    def _draw_header(self, frame, fps):
         cv2.putText(
                 frame,
                 "AI Test Bench",
-                (20, 35),
+                (HEADER_X, HEADER_Y),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.8,
-                (255, 255, 255),
-                2
+                WHITE,
+                BOX_THICKNESS
+        )
+
+        fps_text = f"FPS: {fps:.1f}"
+
+        text_size, _ = cv2.getTextSize(
+                fps_text,
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                BOX_THICKNESS
+        )
+
+        frame_width = frame.shape[1]
+
+        cv2.putText(
+                frame,
+                fps_text,
+                (frame_width - text_size[0] - 20, 35),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                WHITE,
+                BOX_THICKNESS
         )
 
     def _draw_results(self, frame, results):
@@ -47,8 +87,8 @@ class OverlayRenderer:
                     (20, y_position),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.6,
-                    (255, 255, 255),
-                    2
+                    WHITE,
+                    BOX_THICKNESS
             )
 
             y_position += 30
@@ -62,7 +102,7 @@ class OverlayRenderer:
                         (40, y_position),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.5,
-                        (255, 255, 255),
+                        BOX_THICKNESS,
                         1
                 )
 
@@ -77,7 +117,7 @@ class OverlayRenderer:
                 (20, height - 20),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
-                (255, 255, 255),
+                WHITE,
                 1
         )
 
@@ -89,8 +129,8 @@ class OverlayRenderer:
                     frame,
                     (detection.x1, detection.y1),
                     (detection.x2, detection.y2),
-                    (0, 255, 0),
-                    2
+                    GREEN,
+                    BOX_THICKNESS
             )
 
             label = (
@@ -104,6 +144,6 @@ class OverlayRenderer:
                     (detection.x1, detection.y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
-                    (0, 255, 0),
-                    2
+                    GREEN,
+                    BOX_THICKNESS
             )

@@ -17,6 +17,7 @@ from core.manager import InspectionsManager
 from core.inspection_factory import InspectionFactory
 from core.inspection_report import InspectionReport
 from rendering.overlay_renderer import OverlayRenderer
+import time
 
 class Application:
 
@@ -54,6 +55,8 @@ class Application:
         print("Press 's' to save an inspection.")
         print("Press 'q' to quit.")
         
+        previous_time = time.time()
+
         try:
             while True:
                 frame = self.camera.capture()
@@ -65,10 +68,18 @@ class Application:
                 detections = self.detector.detect(frame)
                 results = self.manager.run_all(detections)
                 
+                current_time = time.time()
+                elapsed_time = current_time - previous_time
+
+                fps = 1 / elapsed_time if elapsed_time > 0 else 0
+
+                previous_time = current_time
+
                 annotated_frame = self.renderer.render(
                         frame,
                         detections,
-                        results
+                        results,
+                        fps
                 )
 
                 self.camera.show(annotated_frame)
