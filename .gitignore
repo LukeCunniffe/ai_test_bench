@@ -1,16 +1,40 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Virtual environments
 .venv/
+venv/
+env/
 
-# SQLite
-database/*.db
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Logs
+# Operating system files
+.DS_store
+Thumbs.db
+
+# Runtime data
+*.db
+*.sqlite
+*.sqlite3
 logs/
+reports/
+captures/
+failed_images/
 
-# Models
-models/*.pt
+# Python tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
-# macOS/Linux
-.DS_Store
+# Model and generated files
+*.engine
+*.onnx
+*.pt

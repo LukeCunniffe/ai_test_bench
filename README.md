@@ -1,19 +1,34 @@
-## Mission
-
-AI Test Bench aims to provide a transparent, modular and educational framework for building AI-powered visual inspection systems.
-
-Every architectural decision should favour clarity over complexity.
-
-The project is intended to help engineers learn software architecture, computer vision and inspection system design.
-
 # AI Test Bench
 
-An AI-powered visual inspection framework built with Python.
+A modular, real-time machine-vision inspection framework built with Python,
+OpenCV and YOLO.
 
-## Features
+## Current Features
 
-- Live camera input
+- Live camera inspection
 - YOLO object detection
-- SQLite database
-- Modular inspection framework
-- Designed for Raspberry Pi
+- Detector-independent `Detection` objects
+- Configurable inspection modules
+- Pass/fail inspection results
+- Operator-triggered result saving
+- SQLite result storage
+- Custom live overlays and bounding boxes
+- FPS display
+
+## Architecture
+
+The application separates camera capture, AI detection, inspection logic,
+rendering, reporting and persistence into independent modules.
+
+See [Architecture](docs/architecture.md) for the full design.
+
+## Installation
+
+```bash
+git clone https://github.com/LukeCunniffe/ai_test_bench.git
+cd ai_test_bench
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install -r requirements.txt
