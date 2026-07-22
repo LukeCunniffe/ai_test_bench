@@ -1,8 +1,8 @@
 import cv2
+from rendering.components.bounding_boxes import BoundingBoxRenderer
 from rendering.colours import WHITE, GREEN
+from rendering.components.header import HeaderRenderer
 from rendering.constants import (
-        HEADER_X,
-        HEADER_Y,
         RESULTS_X,
         RESULTS_Y,
         RESULT_SPACING,
@@ -10,7 +10,6 @@ from rendering.constants import (
         CONTROLS_X,
         CONTROLS_BOTTOM_MARGIN,
         BOX_THICKNESS,
-        HEADER_FONT_SCALE,
         RESULT_FONT_SCALE,
         DETAIL_FONT_SCALE,
         CONTROL_FONT_SCALE,
@@ -18,15 +17,19 @@ from rendering.constants import (
 
 class OverlayRenderer:
 
+    def __init__(self):
+        self.header = HeaderRenderer()
+        self.boxes = BoundingBoxRenderer()
+
     def render(self, frame, detections, results, fps):
         annotated_frame = frame.copy()
 
-        self.draw_detections(
+        self.boxes.draw(
                 annotated_frame,
                 detections
         )
 
-        self._draw_header(
+        self.header.draw(
                 annotated_frame,
                 fps
         )
@@ -41,38 +44,6 @@ class OverlayRenderer:
         )
 
         return annotated_frame
-
-    def _draw_header(self, frame, fps):
-        cv2.putText(
-                frame,
-                "AI Test Bench",
-                (HEADER_X, HEADER_Y),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                WHITE,
-                BOX_THICKNESS
-        )
-
-        fps_text = f"FPS: {fps:.1f}"
-
-        text_size, _ = cv2.getTextSize(
-                fps_text,
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
-                BOX_THICKNESS
-        )
-
-        frame_width = frame.shape[1]
-
-        cv2.putText(
-                frame,
-                fps_text,
-                (frame_width - text_size[0] - 20, 35),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
-                WHITE,
-                BOX_THICKNESS
-        )
 
     def _draw_results(self, frame, results):
         y_position = 75
@@ -120,30 +91,3 @@ class OverlayRenderer:
                 WHITE,
                 1
         )
-
-    def draw_detections(self, frame, detections):
-
-        for detection in detections:
-
-            cv2.rectangle(
-                    frame,
-                    (detection.x1, detection.y1),
-                    (detection.x2, detection.y2),
-                    GREEN,
-                    BOX_THICKNESS
-            )
-
-            label = (
-                    f"{detection.class_name} "
-                    f"{detection.confidence:.2f}"
-            )
-
-            cv2.putText(
-                    frame,
-                    label,
-                    (detection.x1, detection.y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
-                    GREEN,
-                    BOX_THICKNESS
-            )
